@@ -1,0 +1,74 @@
+﻿<div ng-controller="homeController" layout="row" flex style="height:100%;">
+    <div layout="row" ng-if="isLoading" layout-align="center center" style="position:absolute; top:0; bottom:0; left:0; right:0;background-color:#fff; opacity:0.6; z-index:12">
+        <md-progress-circular class="md-warn md-hue-3" md-diameter="70"></md-progress-circular>
+    </div>
+
+    <md-sidenav class="md-sidenav-left" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')" md-whiteframe="4">
+        <md-toolbar layout="row">
+            <h1 class="md-toolbar-tools" flex>Menu</h1>
+            <!--<md-icon ng-click="closeSideNav()" hide-gt-md style="margin-right:16px;">close</md-icon>-->
+        </md-toolbar>
+        <md-content>
+            <md-list>
+                <md-list-item ng-click="showVideos()">VIDEOS</md-list-item>
+                <md-list-item ng-click="showAccount()">ACCOUNT DETAILS</md-list-item>
+                <!--<md-list-item><a ng-click="logout()">LOGOUT</a></md-list-item>-->
+            </md-list>
+        </md-content>
+    </md-sidenav>
+    <md-button ng-click="toggleSideNav()"
+               class="md-primary" hide-gt-md>
+        Toggle left
+    </md-button>
+    <div layout="column" flex>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <span flex>BuzzFeed Portal</span>
+                <md-button class="md-icon-button" ng-click="logout()" style="height:48px; width:48px;">
+                    <i class="material-icons " style="font-size:36px">power_settings_new</i>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-content flex>
+
+            <!--<div ui-view="videosView"></div>-->
+            <div ng-show="isVideosView">
+                <div layout="row">
+                    <div style="padding-top:14px" flex>
+                        <md-button ng-disabled="currentPaging.previous == undefined" ng-click="getVideos(currentPaging.previous)">PREVIOUS ({{currentPaging.previous}})</md-button>
+                        <span style="line-height:48px; text-align:center;" flex>CURRENT <b>{{currentPaging.current}}</b></span>
+                        <md-button ng-click="getVideos(currentPaging.next)">NEXT ({{currentPaging.next}})</md-button>
+                    </div>
+                    <div style="margin-right:16px;" flex="15">
+                        <md-input-container class="md-block">
+                            <label>No. of Videos</label>
+                            <md-select ng-change="applyPager()" ng-model="pagerValue">
+                                <md-option ng-repeat="pagerPoint in pagerPoints" ng-value="pagerPoint">{{pagerPoint}}</md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+                </div>
+
+                <md-card ng-if="dataWithPager" ng-repeat="buzz in dataWithPager" md-whiteframe="3" style="padding:10px;">
+                    <div layout="row">
+                        <h3 flex>{{buzz.title}}</h3>
+                        <img style="width: 48px; height: 48px; border-radius:50%; margin-right:16px; margin-top:5px; " ng-src="{{buzz.bylines[0].avatar}}" />
+                    </div>
+
+                    <div layout="row" layout-align="center center">
+                        <img ng-src="{{buzz.images.wide}}" width="600" />
+                    </div>
+                </md-card>
+            </div>
+
+            <div ng-if="isAccountView" style="margin:16px">
+                <h3>Welcome {{userName}}</h3>
+                <b>access token : </b> <span style="word-break:break-all">{{accessToken}}</span>
+                <br /><br />
+                <b>refresh token : </b> <span>{{refreshToken}}</span>
+
+            </div>
+        </md-content>
+
+    </div>
+</div>

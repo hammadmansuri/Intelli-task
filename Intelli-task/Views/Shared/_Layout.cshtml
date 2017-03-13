@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html>
+<html ng-app="app">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/css")
+    @*@Scripts.Render("~/bundles/modernizr")*@
+
+    <link href="~/Content/angular-material.min.css" rel="stylesheet" />
+    <link href="~/Content/icon.css" rel="stylesheet" />
+</head>
+<body ng-cloak>
+    @*<div class="navbar navbar-inverse navbar-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("BuzzFeed Videos", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+
+            </div>*@
+            @*<div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, null)</li>
+                    <li>@Html.ActionLink("API", "Index", "Help", new { area = "" }, null)</li>
+                </ul>
+            </div>*@
+        @*</div>
+    </div>*@
+    <div style="height:100%;">
+        @RenderBody()
+        @*<hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+        </footer>*@
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @*@Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)*@
+
+    <script src="~/Scripts/Angular/angular.min.js"></script>
+    <script src="~/Scripts/Angular/angular-animate.min.js"></script>
+    <script src="~/Scripts/Angular/angular-aria.min.js"></script>
+    <script src="~/Scripts/Angular/angular-messages.min.js"></script>
+    <script src="~/Scripts/Angular/angular-resource.min.js"></script>
+    <script src="~/Scripts/Angular/angular-ui-router.min.js"></script>
+    
+    <script src="~/Scripts/Angular/angular-material.min.js"></script>
+
+    <script src="~/Scripts/App/app.js"></script>
+    <script src="~/Scripts/App/httpServiceFactory.js"></script>
+
+    <script src="~/Scripts/App/loginController.js"></script>
+    <script src="~/Scripts/App/registerController.js"></script>
+    <script src="~/Scripts/App/homeController.js"></script>
+
+</body>
+</html>
