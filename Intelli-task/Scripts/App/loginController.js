@@ -2,7 +2,7 @@
 app.controller('loginController', ['$scope', '$rootScope',  '$state', '$mdToast', 'APIServices', function ($scope, $rootScope, $state, $mdToast, APIServices) {
     $scope.isLoading = false;
     $scope.login = function (loginForm) {
-        $rootScope.isLoading = true;
+        $scope.isLoading = true;
         //if (!loginForm.$error) {
             var userInfo = {
                 grant_type: 'password',

@@ -5,19 +5,24 @@ app.config(function ($stateProvider) {
     var registerState = {
         name: 'register',
         url: '/register',
-        templateUrl: '/Templates/Register.html'
+        templateUrl: '/Templates/Register.html',
+        data:{title:'Register'}
+
     }
 
     var loginState = {
         name: 'login',
         url: '/login',
-        templateUrl: '/Templates/Login.html'
+        templateUrl: '/Templates/Login.html',
+        data:{title:'Login'}
     }
 
     var homeState = {
         name: 'home',
         url: '/index',
-        templateUrl: '/Templates/index.html'
+        templateUrl: '/Templates/index.html',
+        data: { title: 'Home' }
+
     }
 
     var videosState = {
@@ -34,11 +39,13 @@ app.config(function ($stateProvider) {
 
 app.run(['$rootScope', '$location', '$state', function ($rootScope, $location, $state) {
     $rootScope.$on('$locationChangeStart', function (event, next, current) {
+        $rootScope.$state = $state;
         if ($location.path() != '/login' && $location.path() != '/register' && sessionStorage.getItem('accessToken') == null) {
             $state.go('login');
         }
     })
 }]);
+
 
 app.factory('Base64', function () {
     var keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
