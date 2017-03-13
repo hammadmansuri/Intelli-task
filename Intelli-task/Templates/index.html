@@ -10,8 +10,8 @@
         </md-toolbar>
         <md-content>
             <md-list>
-                <md-list-item ng-click="showVideos()">VIDEOS</md-list-item>
-                <md-list-item ng-click="showAccount()">ACCOUNT DETAILS</md-list-item>
+                <md-list-item ng-click="showVideos()" ng-class="{'activeItem': isVideosView}">VIDEOS</md-list-item>
+                <md-list-item ng-click="showAccount()" ng-class="{'activeItem': isAccountView}">ACCOUNT DETAILS</md-list-item>
                 <!--<md-list-item><a ng-click="logout()">LOGOUT</a></md-list-item>-->
             </md-list>
         </md-content>

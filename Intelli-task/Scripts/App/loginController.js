@@ -12,10 +12,16 @@ app.controller('loginController', ['$scope', '$rootScope',  '$state', '$mdToast'
 
             APIServices.Login($.param(userInfo)).$promise.then(function (response) {
                 $scope.isLoading = false;
-                console.log('success');
+                
                 sessionStorage.setItem('userName', response.userName);
                 sessionStorage.setItem('accessToken', response.access_token);
                 sessionStorage.setItem('refreshToken', response.refresh_token);
+
+                $mdToast.show(
+                    $mdToast.simple()
+                    .textContent('Login successfully!')
+                    .position('bottom left')
+                    );
 
                 $state.go('home')
             }, function (error) {
