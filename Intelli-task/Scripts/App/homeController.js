@@ -48,6 +48,11 @@
         }, function (error) {
             $scope.isLoading = false;
             console.log(error);
+            $mdToast.show(
+                    $mdToast.simple()
+                    .textContent('Some error occured! Please try again')
+                    .position('bottom left')
+            );
         });
     }
 

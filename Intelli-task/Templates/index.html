@@ -29,15 +29,22 @@
                 </md-button>
             </div>
         </md-toolbar>
-        <md-content flex>
 
-            <!--<div ui-view="videosView"></div>-->
-            <div ng-show="isVideosView">
-                <div layout="row">
+        <!--<div ui-view="videosView"></div>-->
+        <div layout="column" ng-show="isVideosView">
+            <md-content>
+
+                <div layout="row" style="margin-top:8px">
                     <div style="padding-top:14px" flex>
                         <md-button ng-disabled="currentPaging.previous == undefined" ng-click="getVideos(currentPaging.previous)">PREVIOUS ({{currentPaging.previous}})</md-button>
                         <span style="line-height:48px; text-align:center;" flex>CURRENT <b>{{currentPaging.current}}</b></span>
                         <md-button ng-click="getVideos(currentPaging.next)">NEXT ({{currentPaging.next}})</md-button>
+                    </div>
+                    <div style="margin-right:16px" flex="30">
+                        <md-input-container class="md-block">
+                            <md-icon class="material-icons">search</md-icon>
+                            <input ng-model="searchQuery" type="text" placeholder="SEARCH" />
+                        </md-input-container>
                     </div>
                     <div style="margin-right:16px;" flex="15">
                         <md-input-container class="md-block">
@@ -49,7 +56,7 @@
                     </div>
                 </div>
 
-                <md-card ng-if="dataWithPager" ng-repeat="buzz in dataWithPager" md-whiteframe="3" style="padding:10px;">
+                <md-card ng-if="dataWithPager" ng-repeat="buzz in dataWithPager | filter: searchQuery" md-whiteframe="3" style="padding:10px;">
                     <div layout="row">
                         <h3 flex>{{buzz.title}}</h3>
                         <img style="width: 48px; height: 48px; border-radius:50%; margin-right:16px; margin-top:5px; " ng-src="{{buzz.bylines[0].avatar}}" />
@@ -59,16 +66,17 @@
                         <img ng-src="{{buzz.images.wide}}" width="600" />
                     </div>
                 </md-card>
-            </div>
+            </md-content>
 
-            <div ng-if="isAccountView" style="margin:16px">
-                <h3>Welcome {{userName}}</h3>
-                <b>access token : </b> <span style="word-break:break-all">{{accessToken}}</span>
-                <br /><br />
-                <b>refresh token : </b> <span>{{refreshToken}}</span>
+        </div>
 
-            </div>
-        </md-content>
+        <div ng-if="isAccountView" style="margin:16px">
+            <h3>Welcome {{userName}}</h3>
+            <b>access token : </b> <span style="word-break:break-all">{{accessToken}}</span>
+            <br /><br />
+            <b>refresh token : </b> <span>{{refreshToken}}</span>
+
+        </div>
 
     </div>
 </div>

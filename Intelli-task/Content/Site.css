@@ -19,7 +19,9 @@ textarea {
 ui-view{
     width:100%;
 }
-
+label{
+    font-weight:normal;
+}
 .text-center{
     text-align:center;
 }
