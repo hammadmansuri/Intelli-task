@@ -1,8 +1,4 @@
 ﻿<div ng-controller="homeController" layout="row" flex style="height:100%;">
-    <div layout="row" ng-if="isLoading" layout-align="center center" style="position:absolute; top:0; bottom:0; left:0; right:0;background-color:#fff; opacity:0.6; z-index:12">
-        <md-progress-circular class="md-warn md-hue-3" md-diameter="70"></md-progress-circular>
-    </div>
-
     <md-sidenav class="md-sidenav-left" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')" md-whiteframe="4">
         <md-toolbar layout="row">
             <h1 class="md-toolbar-tools" flex>Menu</h1>
@@ -12,7 +8,6 @@
             <md-list>
                 <md-list-item ng-click="showVideos()" ng-class="{'activeItem': isVideosView}">VIDEOS</md-list-item>
                 <md-list-item ng-click="showAccount()" ng-class="{'activeItem': isAccountView}">ACCOUNT DETAILS</md-list-item>
-                <!--<md-list-item><a ng-click="logout()">LOGOUT</a></md-list-item>-->
             </md-list>
         </md-content>
     </md-sidenav>
@@ -56,7 +51,7 @@
                     </div>
                 </div>
 
-                <md-card ng-if="dataWithPager" ng-repeat="buzz in dataWithPager | filter: searchQuery" md-whiteframe="3" style="padding:10px;">
+                <md-card ng-if="dataWithPager" ng-repeat="buzz in dataWithPager | filter: searchQuery " md-whiteframe="3" style="padding:10px;">
                     <div layout="row">
                         <h3 flex>{{buzz.title}}</h3>
                         <img style="width: 48px; height: 48px; border-radius:50%; margin-right:16px; margin-top:5px; " ng-src="{{buzz.bylines[0].avatar}}" />
@@ -75,6 +70,19 @@
             <b>access token : </b> <span style="word-break:break-all">{{accessToken}}</span>
             <br /><br />
             <b>refresh token : </b> <span>{{refreshToken}}</span>
+
+            <h3>Interviewee Details</h3>
+            <span ng-repeat="interviewee in interviewees">
+                {{interviewee.name}}<br />
+            </span>
+
+            <h3>Interviewer Details</h3>
+            <span ng-if="interviewers" ng-repeat="interviewer in interviewers">
+                {{interviewer.name}}<br />
+            </span>
+            <span ng-if="!isAuthorise">
+                You are not authorise to see this detail
+            </span>
 
         </div>
 

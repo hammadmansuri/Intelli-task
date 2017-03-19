@@ -1,55 +1,54 @@
 ﻿
-app.controller('registerController', ['$scope', '$rootScope', '$mdToast', '$state', 'APIServices', function ($scope, $rootScope, $mdToast, $state, APIServices) {
-    $rootScope.isLoading = false;
+app.controller('registerController', ['$scope', '$rootScope', '$mdToast', '$state', 'APIServices', 'loginService',
+    function ($scope, $rootScope, $mdToast, $state, APIServices, loginService) {
+
+    // Get Roles of application
+    APIServices.GetAllRoles().$promise.then(function (response) {
+        $scope.roles = response;
+    }, function (error) {
+        console.log('some error occured');
+    });
+
+    // Register function
     $scope.register = function (registerForm) {
-        $rootScope.isLoading = true;
-        //if (!loginForm.$error) {
-        var userInfo = {
-            Email: $scope.user.email,
-            Password: $scope.user.password,
-            ConfirmPassword: $scope.user.confirmPassword
-        }
+        // Proceed if only form is valid
+        if (registerForm.$valid) {
 
-        APIServices.Register(userInfo).$promise.then(function (response) {
             var userInfo = {
-                grant_type: 'password',
-                username: $scope.user.email,
-                password: $scope.user.password
+                Email: $scope.user.email,
+                Password: $scope.user.password,
+                ConfirmPassword: $scope.user.confirmPassword,
+                Role: $scope.user.role.Name
             }
-            APIServices.Login($.param(userInfo)).$promise.then(function (response) {
-                $scope.isLoading = false;
-                sessionStorage.setItem('userName', response.userName);
-                sessionStorage.setItem('accessToken', response.access_token);
-                sessionStorage.setItem('refreshToken', response.refresh_token);
 
-                $mdToast.show(
-                    $mdToast.simple()
-                    .textContent('Registered successfully!')
-                    .position('bottom left')
-                    );
+            APIServices.Register(userInfo).$promise.then(function (response) {
+                // Once successfully register, logged in user
+                loginService.Login($scope.user.email, $scope.user.password).then(function (response) {
+                    // After successful login
+                    $mdToast.show(
+                        $mdToast.simple()
+                        .textContent('Registered and login successfully!')
+                        .position('bottom left')
+                        );
+                    // Redirect to Home
+                    $state.go('home')
+                }, function (error) {
+                    // If some error come while login
+                    $mdToast.show(
+                        $mdToast.simple()
+                        .textContent(error.data.error_description)
+                        .position('bottom left')
+                        );
+                });
 
-                $state.go('home')
             }, function (error) {
-                $scope.isLoading = false;
+                // If some error come while registration
                 $mdToast.show(
                     $mdToast.simple()
-                    .textContent('Some error occured! Please try again')
+                    .textContent(error.data.ModelState[""][0])
                     .position('bottom left')
                     );
-                console.log('Error: ' + error);
             });
-
-
-        }, function (error) {
-            $rootScope.isLoading = false;
-            $mdToast.show(
-                $mdToast.simple()
-                .textContent('Some error occured! Please try again')
-                .position('bottom left')
-                );
-
-            console.log('Error: ' + error);
-        });
-        //}
+        }
     }
 }]);

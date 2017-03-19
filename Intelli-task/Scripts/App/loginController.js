@@ -1,22 +1,11 @@
-﻿
-app.controller('loginController', ['$scope', '$rootScope',  '$state', '$mdToast', 'APIServices', function ($scope, $rootScope, $state, $mdToast, APIServices) {
-    $scope.isLoading = false;
+﻿app.controller('loginController', ['$scope', '$rootScope', '$state', '$mdToast', 'APIServices', 'loginService',
+    function ($scope, $rootScope, $state, $mdToast, APIServices, loginService) {
     $scope.login = function (loginForm) {
-        $scope.isLoading = true;
-        //if (!loginForm.$error) {
-            var userInfo = {
-                grant_type: 'password',
-                username: $scope.user.email,
-                password: $scope.user.password
-            }
-
-            APIServices.Login($.param(userInfo)).$promise.then(function (response) {
-                $scope.isLoading = false;
+        // Proceed if login form is valid
+        if (loginForm.$valid) {
+            
+            loginService.Login($scope.user.email, $scope.user.password).then(function (response) {
                 
-                sessionStorage.setItem('userName', response.userName);
-                sessionStorage.setItem('accessToken', response.access_token);
-                sessionStorage.setItem('refreshToken', response.refresh_token);
-
                 $mdToast.show(
                     $mdToast.simple()
                     .textContent('Login successfully!')
@@ -25,14 +14,13 @@ app.controller('loginController', ['$scope', '$rootScope',  '$state', '$mdToast'
 
                 $state.go('home')
             }, function (error) {
-                $scope.isLoading = false;
+                // If some error come
                 $mdToast.show(
                     $mdToast.simple()
-                    .textContent('Some error occured! Please try again')
+                    .textContent(error.data.error_description)
                     .position('bottom left')
                     );
-                console.log('Error: ' + error);
             });
-        //}
+        }
     }
 }]);

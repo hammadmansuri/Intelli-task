@@ -1,5 +1,5 @@
 ﻿'use strict'
-var app = angular.module('app', ['ngMaterial', 'ui.router', 'ngResource']);
+var app = angular.module('app', ['ngMaterial', 'ui.router', 'ngResource', 'ngMessages']);
 
 app.config(function ($stateProvider) {
     var registerState = {
@@ -37,8 +37,10 @@ app.config(function ($stateProvider) {
 
 });
 
+// Redirect to login page if user is not authorize
 app.run(['$rootScope', '$location', '$state', function ($rootScope, $location, $state) {
     $rootScope.$on('$locationChangeStart', function (event, next, current) {
+        // Page title
         $rootScope.$state = $state;
         if ($location.path() != '/login' && $location.path() != '/register' && sessionStorage.getItem('accessToken') == null) {
             $state.go('login');
@@ -46,7 +48,36 @@ app.run(['$rootScope', '$location', '$state', function ($rootScope, $location, $
     })
 }]);
 
+// Confirm password directive
+app.directive('passwordVerify', function () {
+    return {
+        require: 'ngModel',
+        link: function (scope, elem, attrs, ngModel) {
+            if (!ngModel) return; // do nothing if no ng-model
 
+            // watch own value and re-validate on change
+            scope.$watch(attrs.ngModel, function () {
+                validate();
+            });
+
+            // observe the other value and re-validate on change
+            attrs.$observe('passwordVerify', function (val) {
+                validate();
+            });
+
+            var validate = function () {
+                // values
+                var val1 = ngModel.$viewValue;
+                var val2 = attrs.passwordVerify;
+
+                // set validity
+                ngModel.$setValidity('passwordVerify', val1 === val2);
+            };
+        }
+    }
+});
+
+// Base64 factory for basic authentication
 app.factory('Base64', function () {
     var keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
 

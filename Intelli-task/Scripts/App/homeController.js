@@ -1,6 +1,6 @@
-﻿app.controller('homeController', ['$scope', '$state', '$mdSidenav', 'APIServices', function ($scope, $state, $mdSidenav, APIServices) {
-    
+﻿app.controller('homeController', ['$scope', '$state', '$mdSidenav', '$mdToast', 'APIServices', function ($scope, $state, $mdSidenav, $mdToast, APIServices) {
 
+    // Logout functionality
     $scope.logout = function () {
         APIServices.Logout().$promise.then(function (resp) {
             sessionStorage.removeItem('accessToken');
@@ -8,62 +8,82 @@
         });
     }
 
-    $scope.closeSideNav = function () {
-        $mdSidenav('left').close();
-
-    };
-
-    $scope.toggleLeft = function() {
-        $mdSidenav('left').toggle();
-    };
-
-    $scope.isVideosView = true;
-    
+    // Default configuration
     $scope.pagerPoints = [2, 10, 15, 20, 25];
     $scope.pagerValue = 10;
-    var responseData = {};
-
+    
+    // Account tab
     $scope.showAccount = function () {
         $scope.isVideosView = false;
         $scope.isAccountView = true;
 
+        // Set basic details
         $scope.accessToken = sessionStorage.getItem('accessToken');
         $scope.refreshToken = sessionStorage.getItem('refreshToken');
         $scope.userName = sessionStorage.getItem('userName');
+
+        // Get Interviewers details
+        APIServices.GetInterviewers().$promise.then(function (response) {
+            $scope.isAuthorise = true;
+            $scope.interviewers = response;
+        }, function (errorResponse) {
+            if (errorResponse.status == 401) {
+                $scope.isAuthorise = false;
+            } else {
+                $mdToast.show(
+                        $mdToast.simple()
+                        .textContent('Some error occured while getting interviewers details! Please try again')
+                        .position('bottom left')
+                );
+            }
+        });
+
+        // Get Interviewees details
+        APIServices.GetInterviewees().$promise.then(function (response) {
+            $scope.interviewees = response;
+        }, function (errorResponse) {
+            $mdToast.show(
+                $mdToast.simple()
+                .textContent('Some error while getting interviewees details! Please try again')
+                .position('bottom left')
+            );
+        });
     }
 
+    // Implement pager
     $scope.applyPager = function () {
         $scope.dataWithPager = responseData.buzzes.slice(0, $scope.pagerValue);
 
     }
+
+    // Get videos from API
     $scope.getVideos = function (pageNo) {
-        $scope.isLoading = true;
+
         APIServices.GetVideos({ page: pageNo }).$promise.then(function (response) {
-            $scope.isLoading = false;
-            //$scope.responseData == undefined ? $scope.responseData = response : $scope.responseData.buzzes = $scope.responseData.buzzes.concat(response.buzzes);
+
             responseData = response;
-            $scope.dataWithPager = response.buzzes.slice(0,$scope.pagerValue);
+            $scope.applyPager();
             $scope.currentPaging = response.paging;
-            console.log(response);
+            //console.log(response);
         }, function (error) {
-            $scope.isLoading = false;
-            console.log(error);
             $mdToast.show(
                     $mdToast.simple()
-                    .textContent('Some error occured! Please try again')
+                    .textContent('Some error occured while try to get videos! Please try again')
                     .position('bottom left')
             );
         });
     }
 
+    // video tab
     $scope.showVideos = function () {
         $scope.isAccountView = false;
         $scope.isVideosView = true;
-        $scope.isLoading = true;
-        
+
         $scope.getVideos(1);
     }
 
-
+    // Call default video tab
     $scope.showVideos();
+
+
 }]);

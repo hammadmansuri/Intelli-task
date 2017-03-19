@@ -1,31 +1,43 @@
 ﻿'use strict';
-
-app.factory('httpRequestInterceptor', function () {
-    return {
-        request: function (config) {
-            config.headers['Authorization'] = 'Bearer ' + sessionStorage.getItem('accessToken');
-
-            return config;
-        }
-    }
-})
-
 app.config(function ($httpProvider) {
     $httpProvider.interceptors.push('httpRequestInterceptor');
 });
 
-app.factory('APIServices', ['$resource', '$window',
-    function ($resource, $window) {
+app.factory('httpRequestInterceptor', function ($q, $rootScope, $log) {
+    return {
+        request: function (config) {
+            $rootScope.isLoading = true;
+            if (config.url.includes('Token'))
+                return config;
 
-        var baseUrl = '/api';
-        //var headerAuthorizationToken = { Authorization: 'Bearer ' + sessionStorage.getItem('accessToken') };
+            config.headers['Authorization'] = 'Bearer ' + sessionStorage.getItem('accessToken');
+            return config;
+        },
+        response: function (config) {
+            $rootScope.isLoading = false;
+            return config;
+        },
+        responseError: function (error) {
+            $rootScope.isLoading = false;
+            $log.error('Response error : ', error);
+            return $q.reject(error);
+        }
+    }
+})
 
+app.factory('APIServices', ['$resource',
+    function ($resource) {
+
+        var apiPrefix = '/api';
+        var accountPrefix = '/api/Account';
+        var rolesPrefix = '/api/roles';
+        
         return $resource('', {},
             {
-                Register:{
+                Register: {
                     method: 'POST',
                     isArray: false,
-                    url:baseUrl + '/' + 'Account/Register'
+                    url: accountPrefix + '/' + 'Register'
                 },
                 Login: {
                     method: 'POST',
@@ -33,17 +45,30 @@ app.factory('APIServices', ['$resource', '$window',
                     url: '/' + 'Token',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
                 },
+                Logout: {
+                    method: 'POST',
+                    isArray: false,
+                    url: accountPrefix + '/' + 'Logout'
+                },
                 GetVideos: {
                     method: 'GET',
                     isArray: false,
-                    //headers:headerAuthorizationToken,
-                    url: baseUrl + '/' + 'GetBuzzFeedVideos'
+                    url: apiPrefix + '/' + 'GetBuzzFeedVideos'
                 },
-                Logout: {
-                    method:'POST',
-                    isArray: false,
-                    //headers: headerAuthorizationToken,
-                    url: baseUrl + '/' + 'Account/Logout'
+                GetAllRoles: {
+                    method: 'GET',
+                    isArray: true,
+                    url: rolesPrefix + '/' + 'GetAllRoles'
+                },
+                GetInterviewers: {
+                    method: 'GET',
+                    isArray: true,
+                    url: apiPrefix + '/' + 'GetInterviewers'
+                },
+                GetInterviewees: {
+                    method: 'GET',
+                    isArray: true,
+                    url: apiPrefix + '/' + 'GetInterviewees'
                 }
             });
     }
