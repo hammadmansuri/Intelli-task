@@ -49,18 +49,42 @@
                             </md-select>
                         </md-input-container>
                     </div>
+                    <div style="margin-top:16px">
+                        <md-button class="md-icon-button" ng-click="gridView = !gridView">
+                            <i class="material-icons" ng-if="gridView">grid_on</i>
+                            <i class="material-icons" ng-if="!gridView">grid_off</i>
+                        </md-button>
+                    </div>
+
                 </div>
 
-                <md-card ng-if="dataWithPager" ng-repeat="buzz in dataWithPager | filter: searchQuery " md-whiteframe="3" style="padding:10px;">
+                <md-card ng-if="dataWithPager && gridView" ng-repeat="buzz in dataWithPager | filter: searchQuery " md-whiteframe="3" style="padding:10px;">
                     <div layout="row">
                         <h3 flex>{{buzz.title}}</h3>
-                        <img style="width: 48px; height: 48px; border-radius:50%; margin-right:16px; margin-top:5px; " ng-src="{{buzz.bylines[0].avatar}}" />
+                        <img class="avatar-img" ng-src="{{buzz.bylines[0].avatar}}" />
                     </div>
 
                     <div layout="row" layout-align="center center">
                         <img ng-src="{{buzz.images.wide}}" width="600" />
                     </div>
                 </md-card>
+
+                <table ng-if="dataWithPager && !gridView" class="my-table">
+
+                    <tr>
+                        <td style="text-align:center"><span>No#</span></td>
+                        <td style="text-align:center"><span>Video</span></td>
+                        <td><span>Name</span></td>
+                        <td><span>Channel Image</span></td>
+                    </tr>
+
+                    <tr ng-repeat="buzz in dataWithPager | filter: searchQuery">
+                        <td>{{$index+1}}</td>
+                        <td style="text-align:center;"><img ng-src="{{buzz.images.small}}" /></td>
+                        <td>{{buzz.title}}</td>
+                        <td style="text-align:center"><img class="avatar-img" ng-src="{{buzz.bylines[0].avatar}}" /></td>
+                    </tr>
+                </table>
             </md-content>
 
         </div>

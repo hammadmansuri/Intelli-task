@@ -11,7 +11,7 @@
     // Default configuration
     $scope.pagerPoints = [2, 10, 15, 20, 25];
     $scope.pagerValue = 10;
-    
+    $scope.gridView = false;
     // Account tab
     $scope.showAccount = function () {
         $scope.isVideosView = false;

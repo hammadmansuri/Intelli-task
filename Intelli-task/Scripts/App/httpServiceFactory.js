@@ -7,7 +7,7 @@ app.factory('httpRequestInterceptor', function ($q, $rootScope, $log) {
     return {
         request: function (config) {
             $rootScope.isLoading = true;
-            if (config.url.includes('Token'))
+            if (config.url.indexOf('Login') !== -1)
                 return config;
 
             config.headers['Authorization'] = 'Bearer ' + sessionStorage.getItem('accessToken');
@@ -42,7 +42,8 @@ app.factory('APIServices', ['$resource',
                 Login: {
                     method: 'POST',
                     isArray: false,
-                    url: '/' + 'Token',
+                    //url: accountPrefix + '/' + 'Login',
+                    url:  '/' + 'Token',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
                 },
                 Logout: {

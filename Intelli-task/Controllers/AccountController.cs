@@ -16,6 +16,8 @@ using Microsoft.Owin.Security.OAuth;
 using Intelli_task.Models;
 using Intelli_task.Providers;
 using Intelli_task.Results;
+using System.Text;
+using Intelli_task.Business;
 
 namespace Intelli_task.Controllers
 {
@@ -64,6 +66,38 @@ namespace Intelli_task.Controllers
                 HasRegistered = externalLogin == null,
                 LoginProvider = externalLogin != null ? externalLogin.LoginProvider : null
             };
+        }
+        [Route("Login")]
+        [AllowAnonymous]
+        [BasicAuthentication]
+        public IHttpActionResult Login()
+        {
+            try
+            {
+                //var encoding = Encoding.GetEncoding("iso-8859-1");
+                //credentials = encoding.GetString(Convert.FromBase64String(credentials));
+
+                //int separator = credentials.IndexOf(':');
+                //string name = credentials.Substring(0, separator);
+                //string password = credentials.Substring(separator + 1);
+
+                //if (CheckPassword(name, password))
+                //{
+                //    var identity = new GenericIdentity(name);
+                //    SetPrincipal(new GenericPrincipal(identity, null));
+                //}
+                //else
+                //{
+                //    // Invalid username or password.
+                //    HttpContext.Current.Response.StatusCode = 401;
+                //}
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+            return Ok();
         }
 
         // POST api/Account/Logout
